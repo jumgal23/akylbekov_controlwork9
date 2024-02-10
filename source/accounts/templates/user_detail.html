@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ user.username }} - User Profile
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2>{{ user.username }}'s Profile</h2>
+        <p>Email: {{ user.email }}</p>
+        <!-- Add other user-related information as needed -->
+
+        {% if user == request.user %}
+            <p><a href="{% url 'accounts:edit_profile' %}">Edit Profile</a></p>
+        {% endif %}
+    </div>
+{% endblock %}
