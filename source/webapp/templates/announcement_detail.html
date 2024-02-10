@@ -1,33 +1,49 @@
 {% extends 'base.html' %}
-
-{% block content %}
-  <h1>{{ announcement.heading }}</h1>
-  <p>{{ announcement.description }}</p>
-  <p>Цена: {{ announcement.price }}</p>
-  <p>Автор: {{ announcement.author.username }}</p>
-  <p>Дата создания: {{ announcement.date_creation }}</p>
-  <p>Дата публикации: {{ announcement.date_publications }}</p>
-
-  <h2>Комментарии</h2>
-  <ul>
-    {% for comment in announcement.comments.all %}
-      <li>
-        <p>{{ comment.text }}</p>
-        <p>Автор: {{ comment.author.username }}</p>
-        <p>Дата создания: {{ comment.date_creation_com }}</p>
-        {% if user.is_authenticated and user == comment.author %}
-          <a href="{% url 'webapp:comment_delete' comment.pk %}">Удалить комментарий</a>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
-
-  {% if user.is_authenticated %}
-    <h2>Добавить комментарий</h2>
+    {% block menu %}
+          {% if user.is_authenticated %}
     <form method="post" action="{% url 'webapp:comment_create' announcement.pk %}">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit">Добавить комментарий</button>
+      <button class="border-0" type="submit">Добавить комментарий</button>
     </form>
-  {% endif %}
+
+    {% endif %}
 {% endblock %}
+
+{% block content %}
+    <h1 >{{ announcement.img }}</h1>
+    <h2>Заголовок: {{ announcement.heading }}</h2>
+    <p >Описание: {{ announcement.description }}</p>
+    <p >Автор: {{ announcement.author }}</p>
+    <p >Категория: {{ announcement.category }}</p>
+    <p >Цена: {{ announcement.price }}</p>
+    <p >Дата-время создания: {{ announcement.date_creation }}</p>
+    <p >Дата-время публикации: {{ announcement.date_publications }}</p>
+    <p >Дата-время редактирования: {{ announcement.date_update }}</p>
+    <a href="{% url 'webapp:announcement_detail' pk=announcement.pk %}" class="card-link">Подробнее...</a>
+    {% if user.is_authenticated and user == announcement.author %}
+    <a href="{% url 'webapp:announcement_update' announcement.pk %}">Редактировать</a>
+    <a href="{% url 'webapp:announcement_delete' announcement.pk %}">Удалить</a>
+{% endif %}
+    <br></br>
+
+
+  <h2>Комментарии</h2>
+<div class="row">
+    {% for comment in comments %}
+        <div class="col">
+            <div class="card my-3" style="width: 18rem;">
+                <div class="card-body">
+                    <p>{{ comment.text }}</p>
+                    <p>Автор: {{ comment.author.username }}</p>
+                    <p>Дата создания: {{ comment.date_creation_com }}</p>
+                    {% if user.is_authenticated and user == comment.author %}
+                    <a href="{% url 'webapp:comment_delete' comment.pk %}">Удалить комментарий</a>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+{% endfor %}
+{% endblock %}
+

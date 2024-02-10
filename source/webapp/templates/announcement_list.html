@@ -1,16 +1,40 @@
 {% extends 'base.html' %}
+    {% block menu %}
+          {% if user.is_authenticated %}
+    <form method="post" action="{% url 'webapp:announcement_create' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="border-0" type="submit">Создание обьявления</button>
+    </form>
+
+    {% endif %}
+{% endblock %}
 
 {% block content %}
   <h1>Объявления</h1>
-  <ul>
+  <div class="row">
+
+
     {% for announcement in announcements %}
-      <li>
-        <a href="{% url 'webapp:announcement_detail' announcement.pk %}">{{ announcement.heading }}</a>
-        {% if user.is_authenticated and user == announcement.author %}
-          <a href="{% url 'webapp:announcement_update' announcement.pk %}">Редактировать</a>
-          <a href="{% url 'webapp:announcement_delete' announcement.pk %}">Удалить</a>
-        {% endif %}
-      </li>
+        <div class="col">
+                    <div class="card my-3" style="width: 18rem;">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ announcement.img }}</h6>
+                            <h6 class="card-title">{{ announcement.heading }}</h6>
+                            <h6 class="card-title">{{ announcement.description }}</h6>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ announcement.author }}</h6>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ announcement.category }}</h6>
+                            <h6 class="card-title">{{ announcement.price }}</h6>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ announcement.date_creation }}</h6>
+                            <h6 class="card-title">{{ announcement.date_update }}</h6>
+                            <a href="{% url 'webapp:announcement_detail' pk=announcement.pk %}" class="card-link">Подробнее...</a>
+                            {% if user.is_authenticated and user == announcement.author %}
+                            <a href="{% url 'webapp:announcement_update' announcement.pk %}">Редактировать</a>
+                            <a href="{% url 'webapp:announcement_delete' announcement.pk %}">Удалить</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
     {% endfor %}
-  </ul>
 {% endblock %}
+

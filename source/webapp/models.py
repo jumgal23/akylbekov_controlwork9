@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.urls import reverse
 
 
 status_choices = [
@@ -34,6 +35,9 @@ class Announcement(models.Model):
     def __str__(self):
         return self.heading
 
+    def get_absolute_url(self):
+        return reverse('webapp:announcement_detail', kwargs={'pk': self.pk})
+
 
 @receiver(post_save, sender=Announcement)
 def set_date_publications(sender, instance, **kwargs):
@@ -45,7 +49,7 @@ def set_date_publications(sender, instance, **kwargs):
 class Comment(models.Model):
     text = models.TextField(blank=False, null=False, verbose_name="Текст ")
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='commet', verbose_name="Автор ")
-    announcement_com = models.ForeignKey(Announcement, on_delete=models.CASCADE, verbose_name="Объявление ")
+    announcement_com = models.ForeignKey(Announcement, related_name='comments', on_delete=models.CASCADE, verbose_name="Объявление ")
     date_creation_com = models.DateTimeField(auto_now_add=True, verbose_name="Дата-время создания")
 
     def __str__(self):
