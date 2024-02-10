@@ -20,7 +20,7 @@ class Category(models.Model):
 
 
 class Announcement(models.Model):
-    img = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name="Фотография")
+    img = models.ImageField(upload_to='static/img/', blank=True, null=True, verbose_name="Фотография")
     heading = models.CharField(max_length=50, blank=False, null=False, verbose_name="Заголовок ")
     description = models.TextField(blank=True, null=True, verbose_name="Описание ")
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='announcement', verbose_name="Автор ")

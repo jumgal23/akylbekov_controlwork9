@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Объявления</h1>
+  <ul>
+    {% for announcement in announcements %}
+      <li>
+        <a href="{% url 'webapp:announcement_detail' announcement.pk %}">{{ announcement.heading }}</a>
+        {% if user.is_authenticated and user == announcement.author %}
+          <a href="{% url 'webapp:announcement_update' announcement.pk %}">Редактировать</a>
+          <a href="{% url 'webapp:announcement_delete' announcement.pk %}">Удалить</a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
